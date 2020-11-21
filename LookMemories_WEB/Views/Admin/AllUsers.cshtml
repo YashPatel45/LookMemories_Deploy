@@ -1,0 +1,75 @@
+﻿@model List<AccountUser>
+@{
+    ViewData["PTitle"] = "All Users";
+    ViewData["Title"] = "AllUsers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Script{ 
+
+<script>
+    $(function () {
+        $('.deleteUser').click(function () {
+
+            if (confirm("Are you sure to delete this user?")) {
+
+            }
+            else {
+                return false;
+            }
+
+        })
+        
+
+    }); 
+</script>
+}
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="home-tab" asp-action="AllUsers" asp-controller="Admin">All Users</a>
+    </li>
+   
+   
+</ul>
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+        <table class="table table-bordered">
+
+
+
+            <tbody>
+                <tr>
+                    <th scope="row">First Name</th>
+                    <th scope="row">Last Name</th>
+                    <th scope="row">Email</th>
+                    <th scope="row">Gender</th>
+                    <th scope="row">Action</th>
+                </tr>
+                @foreach (var item in Model)
+                {
+            <tr>
+                <td scope="col">@item.FirstName</td>
+                <td scope="col">@item.LastName</td>
+                <td scope="col">@item.Email</td>
+                <td scope="col">@item.Gender</td>
+                <td scope="col">
+
+                    <a asp-action="EditUser" asp-controller="Admin" asp-route-UserId="@item.Id"  ><span class="fas fa-pencil-alt"></span></a>
+
+                    <a asp-action="DeleteUser" asp-controller="Admin" asp-route-UserId="@item.Id" class="deleteUser"><span class="fas fa-trash"></span></a>
+
+
+                </td>
+            </tr>
+                }
+
+
+
+            </tbody>
+        </table>
+
+    </div>
+  
+
+</div>
+

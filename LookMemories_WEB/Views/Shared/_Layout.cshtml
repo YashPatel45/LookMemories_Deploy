@@ -1,0 +1,326 @@
+﻿@inject Microsoft.AspNetCore.Identity.UserManager<AccountUser> manager
+@{ 
+
+
+    AccountUser user = await manager.GetUserAsync(User);
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewData["PTitle"]</title>
+    <link href="~/twitter-bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/font-awesome/css/all.css" rel="stylesheet" />
+    <link href="~/jqueryui/jquery-ui.css" rel="stylesheet" />
+    <style>
+        .input-group {  
+            margin-top: 4px;
+        }
+    </style>
+    @RenderSection("Style", false)
+
+</head>
+
+
+
+
+
+
+<body>
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <a class="navbar-brand" asp-controller="User" asp-action="AllAlbums">Look Memories</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav mr-auto">
+                @if (User.IsInRole(LookMemories_WEB.Model.RolesEnum.Admin.ToString()))
+                {
+                    <li class="nav-item @(ViewBag.Title == "AllUsers" ? "active" : " ")">
+                        <a class="nav-link" asp-controller="Admin" asp-action="AllUsers">All Users <span class="sr-only">(current)</span></a>
+                    </li>
+                }
+
+                <li class="nav-item @(ViewBag.Title == "Home" ? "active" : " ")">
+                    <a class="nav-link" asp-controller="User" asp-action="AllAlbums">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item @(ViewBag.Title == "Profile" ? "active" : "")">
+                    <a class="nav-link" asp-controller="User" asp-action="Profile">Profile</a>
+                </li>
+
+                <li class="nav-item @(ViewBag.Title == "Profile" ? "active" : "")">
+                    <a class="nav-link" asp-controller="User" asp-action="MyAlbums">My Albums</a>
+                </li>
+                <li>
+                    <form asp-controller="User" asp-action="SearchMemories" method="get" class="form-inline my-2 my-lg-0">
+                        <input class="form-control mr-sm-2" id="q" name="q" value="@ViewBag.q" type="text" placeholder="Search by Img Name" aria-label="Search">
+                        <button class="btn btn-outline-success mr-4 my-2 mr-2 my-sm-0" type="submit">Search</button>
+                    </form>
+                </li>
+
+            </ul>
+            <ul class="navbar-nav">
+
+                <li class="nav-item">
+                    <a class="navbar-brand ml-1" href="#" style="font-size: 0.80rem;">Welcome  @(user.FirstName +" " + user.LastName) </a>'
+                </li>
+                <li class="nav-item" style="padding-top: 4px;">
+                    <a asp-controller="Account" asp-action="Logout" class="my-4 my-sm-0" title="Logout"><i class="fas fa-sign-out-alt"></i></a>
+                </li>
+            </ul>
+
+
+        </div>
+    </nav>
+
+    <main role="main" class="m-2 mt-3">
+
+
+        <div class="starter-template">
+
+            @RenderBody()
+
+        </div>
+
+    </main><!-- /.container -->
+    @*<button id="opener">open the dialog</button>*@
+    <div id="dialog" class="text-center">
+
+        <img class="img-fluid align-content-center" src="" id="opnerImg" />
+    </div>
+
+    @await Component.InvokeAsync("NToastNotify")
+
+    <div id="AllImages" class="d-none">
+
+
+
+    </div>
+
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <form id="ShareForm" asp-action="ShareImages" asp-controller="User" method="post">
+                    <input type="hidden" name="SId" id="SId" />
+                    <input type="hidden" name="IsAlbum" id="IsAlbum" />
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Share Album</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        @*<label for="basic-url">Email Address</label>*@
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon3">Email Address</span>
+                            </div>
+                            <input type="email" name="SEmailId" required class="form-control" id="SEmailId" aria-describedby="basic-addon3">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Share</button>
+                    </div>
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+
+
+    <script src="~/jquery/jquery.min.js"></script>
+    <script src="~/twitter-bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/font-awesome/js/all.js"></script>
+
+    <script src="~/jqueryui/jquery-ui.js"></script>
+    <script src="~/FileSaver/FileSaver.js"></script>
+    <script src="~/jszip/jszip.js"></script>
+    <script src="~/js/FileUplodingScript.js"></script>
+
+    <script>
+
+        $(function () {
+
+            $('.deletealbum').click(function (event) {
+                if (!confirm("Are you sure to delete this album?")) {
+                    return false;
+                }
+            });
+
+
+            $('#ShareForm').submit(function (event) {
+                event.preventDefault();
+
+                var ShareObj = new Object();
+                ShareObj.SEmailId = $('#SEmailId').val();
+                ShareObj.SId = $('#SId').val();
+                ShareObj.IsAlbum = $('#IsAlbum').val();
+                 $.ajax({
+
+                  url:'@Url.Action("ShareImages", "User")',
+                     data: { model: ShareObj },
+                type: 'POST',
+                   success: function (result) {
+
+                       if (result) {
+
+                           $('#exampleModal').modal('toggle');
+                           alert("Successfuly Shared.");
+
+
+                       }
+                      
+
+
+                },
+                   error: function (jqXHR, textStatus, errorThrown) {
+                       console.log(jqXHR);
+                       console.log(textStatus);
+                       console.log(errorThrown);
+                    alert("error");
+
+
+                }
+            });
+
+
+            })
+
+            $('.Downloadpic').click(function () {
+                var pic = $(this).attr('data-pic');
+                var picName = $(this).attr('data-photoname');
+                if (picName == undefined || picName == '') {
+                    picName = "LM_IMG";
+                }
+
+
+
+
+                var img = "<a href='" + pic + "' download='" + picName + "'><img src='" + pic + "' class='img-thumbnail imgdownload' /></a>";
+                $("#AllImages").append(img);
+
+
+                var anch = $("#AllImages").find('a')[0];
+
+
+
+                    anch.click();
+
+                $('#AllImages').html('');
+
+            });
+
+            $('.DownloadAlbum').click(function () {
+                var albumId = $(this).attr('data-albumid');
+                downloadAlbum(albumId);
+            });
+
+
+            $('.sharebtn').click(function () {
+
+                var isAlbum = $(this).attr('data-isalbum');
+                var SId = $(this).attr('data-sid');
+
+                $("#SId").val(SId);
+                $("#IsAlbum").val(isAlbum);
+
+
+                console.log(SId);
+                console.log(isAlbum);
+
+            });
+
+        });
+
+
+
+        $("#dialog").dialog({
+            autoOpen: false, width: "90%",
+            maxWidth: "768px"
+        });
+        $(".userimage").click(function () {
+            var test = $(this).attr('src');
+            console.log(test);
+
+            $('#opnerImg').attr('src', test)
+            $("#dialog").dialog("open");
+        });
+
+
+
+        var zip = new JSZip();
+
+
+        function downloadAlbum(AlbumId) {
+
+
+               $.ajax({
+
+                  url:'@Url.Action("DownloadAlbum", "User")',
+                   data: { albumId: AlbumId },
+                type: 'GET',
+                   success: function (result) {
+
+                       if (result) {
+
+                           var albumName = result.albumName;
+
+                           //skip this step if you don't want your files in a folder.
+
+                           var html = "";
+                           for (var i = 0; i < result.photoList.length; i++) {
+                               var imgName = result.photoList[i].imgName;
+                               if (imgName == null || imgName == "") {
+                                   imgName = "IMG_" + i;
+                               }
+                               var img = "<a href='" + result.photoList[i].photoPath + "' download='" + imgName+"'><img src='" + result.photoList[i].photoPath + "' class='img-thumbnail imgdownload' /></a>";
+                               $("#AllImages").append(img);
+
+
+
+
+
+
+                           }
+                           var anch = $("#AllImages").find('a');
+
+                           for (var i = 0; i < anch.length; i++) {
+
+                               anch[i].click();
+                           }
+
+                           $('#AllImages').html('');
+                           //...so on until you have completed adding files
+
+
+
+                       }
+
+
+                },
+                   error: function (jqXHR, textStatus, errorThrown) {
+                       console.log(jqXHR);
+                       console.log(textStatus);
+                       console.log(errorThrown);
+                    alert("error");
+
+
+                }
+            });
+
+        }
+
+    </script>
+
+
+    @RenderSection("Script", false)
+</body>
+</html>

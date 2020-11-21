@@ -1,0 +1,112 @@
+﻿@model List<Album>
+@inject IConfiguration configuration
+@{
+    ViewData["PTitle"] = "My Albums";
+    ViewData["Title"] = "Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link" id="home-tab" asp-action="Profile" asp-controller="User">Profile</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="profile-tab" asp-action="EditProfile" asp-controller="User">Edit Profile</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="contact-tab0" asp-action="NewAlbum" asp-controller="User">New Albums</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" id="contact-tab" asp-action="MyAlbums" asp-controller="User">My Albums</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="contact-tab2" asp-action="Favorites" asp-controller="User">Favorites</a>
+    </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">1</div>
+    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+
+        1
+
+
+    </div>
+    <div class="tab-pane fade" id="contact0" role="tabpanel" aria-labelledby="contact-tab0">312</div>
+    <div class="tab-pane fade show active" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+
+        @if (Model.Count > 0)
+        {
+            <div class="row mt-3">
+
+                <div class="col-md-12">
+
+                    <div class="card">
+                        <div class="card-header">
+                            All ALbums
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                @foreach (var item in Model)
+                                {
+
+                                    string photopath = String.Empty;
+                                <div class="col-md-2">
+
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <span class="fa fa-download DownloadAlbum text-info" data-albumid="@item.Id"></span>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <a asp-action="DeleteAlbum" asp-controller="User" asp-route-albumid="@item.ProtectorId" asp-route-pagename="myalbums" class="deletealbum"><i class="float-right fa fa-trash text-info"></i></a>
+
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <span style="cursor: pointer;" class="float-right fa fa-share text-info sharebtn" data-isAlbum="true" data-SId="@item.ProtectorId" data-toggle="modal" data-target="#exampleModal"></span>
+
+                                        </div>
+                                    </div>
+                                    <a asp-action="AlbumDetail" asp-controller="User" asp-route-albumId="@item.ProtectorId">
+                                        @{
+                                            if (item.PhotoList.Count > 0)
+                                            {
+
+                                                string basepath = "~/" + configuration["PhotoPath"].ToString() + "/";
+                                                photopath = basepath + item.PhotoList[0].PhotoPath;
+
+                                            }
+                                            else
+                                            {
+                                                string basepath = "~/" + configuration["PhotoPath"].ToString() + "/";
+                                                photopath = basepath + "noimg.png";
+
+                                            }
+                                        }
+                                        <img src="@photopath" class="img-thumbnail" asp-append-version="true" />
+                                        <div class="text-center mt-1"><b>@item.AlbumName</b></div>
+                                    </a>
+                                </div>
+                                }
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+                                            }
+                                            else { 
+                                            <p>No Album Found</p>
+                                            }
+
+
+
+   
+
+
+    </div>
+    <div class="tab-pane fade" id="contact2" role="tabpanel" aria-labelledby="contact-tab2">4</div>
+</div>
+

@@ -1,0 +1,211 @@
+﻿@model NewAlbumViewModel
+@inject IConfiguration configuration
+@{
+    ViewData["PTitle"] = "New Album";
+ 
+    ViewData["Title"] = "Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Script{
+    <script>
+        $(function () {
+            $("#FileLists").change(function (event) {
+                var files = $("#FileLists")[0].files;
+
+                // readURL(this);
+                //console.log(files);
+                //alert("Uploded");
+            });
+
+        });
+    </script>
+}
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link" id="home-tab" asp-action="Profile" asp-controller="User">Profile</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="profile-tab" asp-action="EditProfile" asp-controller="User">Edit Profile</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" id="contact-tab0" asp-action="NewAlbum" asp-controller="User">New Albums</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="contact-tab" asp-action="MyAlbums" asp-controller="User">My Albums</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="contact-tab2" asp-action="Favorites" asp-controller="User">Favorites</a>
+    </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade " id="home" role="tabpanel" aria-labelledby="home-tab">
+
+
+
+    </div>
+    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">2</div>
+    <div class="tab-pane fade show active mt-2" id="contact0" role="tabpanel" aria-labelledby="contact-tab0">
+
+
+
+
+
+
+        <h2>Create Album</h2>
+        <form asp-controller="User" asp-action="NewAlbum" method="post" enctype="multipart/form-data">
+            <div class="row">
+                @if (!String.IsNullOrEmpty(ViewBag.Error))
+                {
+                <div class="text-danger col-md-12">
+                    @ViewBag.Error
+                </div>
+
+                }
+                
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="">Album Name</span>
+                        </div>
+                        <input required asp-for="@Model.Album.AlbumName" type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input multiple accept="image/*" asp-for="@Model.Album.FileLists" type="file" class="btn btn-info" value="Upload Photos" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="">
+                        <input class="btn btn-success mt-2" type="submit" value="Create Album" />
+
+                    </div>
+                </div>
+
+
+
+            </div>
+
+
+
+
+
+
+        </form>
+
+
+        @*<div class="row mt-3">
+
+                <div class="col-md-12">
+
+                    <div class="card">
+                        <div class="card-header">
+                            All ALbums
+                        </div>
+                        <div class="card-body">
+
+
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Image</th>
+                                        <th>Comment/Tag</th>
+                                        <th>Change</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>1</th>
+                                        <td>Mark</td>
+                                        <td><input type="button" value="Change" class="btn btn-info" /></td>
+                                        <td><input type="button" value="Delete" class="btn btn-danger" /></td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>*@
+
+        @if (Model.AlbumList.Count > 0)
+        {
+            <div class="row mt-3">
+
+                <div class="col-md-12">
+
+                    <div class="card">
+                        <div class="card-header">
+                            All ALbums
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                @foreach (var item in Model.AlbumList)
+                                {
+
+                                    string photopath = String.Empty;
+
+
+                                <div class="col-md-3">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <span class="fa fa-download DownloadAlbum text-info" data-albumid="@item.Id"></span>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <a asp-action="DeleteAlbum" asp-controller="User"  asp-route-albumid="@item.ProtectorId" asp-route-pagename="newalbums" class="deletealbum"><i class="float-right fa fa-trash text-info"></i></a>
+
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <span style="cursor: pointer;" class="float-right fa fa-share text-info sharebtn" data-isAlbum="true" data-SId="@item.ProtectorId" data-toggle="modal" data-target="#exampleModal"></span>
+
+                                        </div>
+                                    </div>
+                                    <a asp-action="AlbumDetail" asp-controller="User" asp-route-albumId="@item.ProtectorId">
+                                        @{
+                                            if (item.PhotoList.Count > 0)
+                                            {
+
+
+                                                string basepath = "~/" + configuration["PhotoPath"].ToString() + "/";
+                                                photopath = basepath + item.PhotoList[0].PhotoPath;
+                                            }
+                                            else
+                                            {
+                                                string basepath = "~/" + configuration["PhotoPath"].ToString() + "/";
+                                                photopath = basepath + "noimg.png";
+
+                                            }
+                                        }
+                                        <img src="@photopath" class="img-thumbnail" asp-append-version="true" />
+                                        <div class="text-center mt-1"><b>@item.AlbumName</b></div>
+                                    </a>
+                                </div>
+
+
+                                }
+                            </div>
+
+                                <div>
+
+                                </div>
+                            </div>
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+
+
+
+    </div>
+    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">3</div>
+    <div class="tab-pane fade" id="contact2" role="tabpanel" aria-labelledby="contact-tab2">4</div>
+</div>
+

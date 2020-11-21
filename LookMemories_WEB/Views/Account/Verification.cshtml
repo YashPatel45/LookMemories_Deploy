@@ -1,0 +1,35 @@
+﻿@model SecurityQuestionViewModel
+@{
+    ViewData["Title"] = "SecurityQuestion";
+    Layout = "~/Views/Shared/_AccountLayout.cshtml";
+}
+
+
+            <div class="card-body">
+                <h5 class="card-title text-center">User Verification</h5>
+                <form asp-action="Verification" asp-controller="Account" method="post" autocomplete="off" class="form-signin">
+
+                    <div asp-validation-summary="All" class="text-danger"></div>
+
+                    <div class="form-label-group">
+                        <input type="email" id="inputEmail" asp-for="@Model.Email" class="form-control" placeholder="Email address" required autofocus>
+                        <label for="inputEmail">Email Address</label>
+                    </div>
+                    <div class="form-label-group">
+
+                        <select required asp-for="@Model.QuestionId" class="form-control" placeholder="select Question"
+                                asp-items="@(new SelectList(@Model.SecurityQuestionsList,"Id","Question"))">
+                        </select>
+                    </div>
+                    <div class="form-label-group">
+                        <input type="text" asp-for="@Model.Answer" id="an" class="form-control" placeholder="Password" required>
+                        <label for="an">Answer</label>
+                    </div>
+
+
+                    <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Submit</button>
+                    <hr class="my-4">
+                    <a asp-action="Login" asp-controller="Account">Back to Login</a>
+                </form>
+            </div>
+     

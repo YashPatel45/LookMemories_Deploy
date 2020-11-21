@@ -1,0 +1,62 @@
+﻿@model RegistrationViewModel
+@{
+    ViewBag.Title = "Registration";
+Layout = "~/Views/Shared/_AccountLayout.cshtml";
+}
+
+<div class="card-body">
+    <h5 class="card-title text-center">Sign Up</h5>
+
+    <form asp-action="Registration" asp-controller="Account" method="post" autocomplete="off" class="form-signin">
+
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <input type="hidden" asp-for="@Model.SecurityQuestionsList" />
+        <div class="form-label-group">
+            <input asp-for="@Model.FName" type="text" id="fname" class="form-control" placeholder="First Name" required autofocus>
+            <label for="fname">First Name</label>
+        </div>
+        <div class="form-label-group">
+            <input asp-for="@Model.LName" type="text" id="name" class="form-control" placeholder="Last Name" required autofocus>
+            <label for="name">Last Name</label>
+        </div>
+        <div class="form-label-group">
+            <input asp-for="@Model.Email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+            <label for="inputEmail">Email address</label>
+        </div>
+        <div class="form-label-group">
+            <input asp-for="@Model.UserName" type="text" id="UserNameinput" class="form-control" placeholder="User Name" required autofocus>
+            <label for="UserNameinput">User Name</label>
+        </div>
+        <div class="form-label-group">
+            <input asp-for="@Model.Password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+            <label for="inputPassword">Password</label>
+        </div>
+        <div class="form-label-group">
+            <input asp-for="@Model.ConfirmPassword" type="password" id="cinputPassword" class="form-control" placeholder="Confirm Password" required>
+            <label for="cinputPassword">Confirm Password</label>
+        </div>
+
+        @*<div class="form-label-group">
+            <input type="password" id="sq" class="form-control" placeholder="Password" required>
+            <label for="sq">Security Question</label>
+        </div>*@
+        <div class="form-label-group">
+
+            <select required asp-for="@Model.QuestionId" class="form-control" placeholder="select Question"
+                    asp-items="@(new SelectList(@Model.SecurityQuestionsList,"Id","Question"))">
+            </select>
+        </div>
+
+        <div class="form-label-group">
+            <input asp-for="@Model.Answer" type="text" id="an" class="form-control" placeholder="Answer" required>
+            <label for="an">Answer</label>
+        </div>
+
+
+        <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign up</button>
+        <hr class="my-4">
+        <a asp-action="Login" asp-controller="Account">Back to Login</a>
+    </form>
+</div>
+

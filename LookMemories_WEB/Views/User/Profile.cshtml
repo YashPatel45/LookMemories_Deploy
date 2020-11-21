@@ -1,0 +1,89 @@
+﻿@model AccountUser
+@{
+    ViewData["PTitle"] = "Profile";
+    ViewData["Title"] = "Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@*@section Script{
+    <script>
+
+        $(function () {
+
+            $('.nav-tabs nav-item a[href="#Profile"]').tab('show');
+
+            $('#home-tab').addClass('active');
+            $('#eprofile-tab').removeClass('active');
+            $('#menu3').removeClass('active');
+            $('#menu1').removeClass('active');
+        });
+    </script>
+}*@
+
+
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="home-tab" asp-action="Profile" asp-controller="User">Profile</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="profile-tab" asp-action="EditProfile" asp-controller="User">Edit Profile</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="contact-tab0" asp-action="NewAlbum" asp-controller="User">New Albums</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="contact-tab" asp-action="MyAlbums" asp-controller="User">My Albums</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="contact-tab2" asp-action="Favorites" asp-controller="User">Favorites</a>
+    </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+        <table class="table table-borderless table-responsive">
+
+
+
+            <tbody>
+                <tr>
+                    <th scope="col">First Name</th>
+                    <td scope="col">@Model.FirstName</td>
+                    <th scope="col">Last Name</th>
+                    <td scope="col">@Model.LastName</td>
+                </tr>
+                <tr>
+                    <th scope="col">Date of Birth</th>
+                    <td scope="col">@Model.DOB</td>
+                    <th scope="col">Gender</th>
+                    <td scope="col">@Model.Gender</td>
+                </tr>
+                <tr>
+                    <th scope="col">About Me</th>
+                    <td scope="col" colspan="3">@Model.AboutMe</td>
+
+                </tr>
+                <tr>
+                    <th scope="col">Security Question</th>
+                    <td scope="col">@Model.SecurityQuestionName</td>
+                    <th scope="col">Answer</th>
+                    <td scope="col">@Model.Answer</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">2</div>
+    <div class="tab-pane fade" id="contact0" role="tabpanel" aria-labelledby="contact-tab0">312</div>
+    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">3</div>
+    <div class="tab-pane fade" id="contact2" role="tabpanel" aria-labelledby="contact-tab2">4</div>
+</div>
+
+
+
+
+
+
+
+
+

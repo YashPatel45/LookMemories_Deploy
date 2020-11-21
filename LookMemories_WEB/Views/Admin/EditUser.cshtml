@@ -1,0 +1,120 @@
+﻿@model EditProfile
+@{   ViewData["PTitle"] = "Edit Profile";
+    ViewData["Title"] = "EditUser";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+    string enddate = DateTime.Now.AddYears(-5).ToString("yyyy-MM-dd");
+}
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link " id="home-tab" asp-action="AllUsers" asp-controller="Admin">All Users</a>
+    </li>
+    <li class="nav-item" disabled>
+        <a disabled class="nav-link active" id="profile-tab" href="#">Edit User</a>
+    </li>
+
+</ul>
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade " id="home" role="tabpanel" aria-labelledby="home-tab">
+
+        1
+
+    </div>
+    <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+
+        @if (!String.IsNullOrEmpty(ViewBag.Errors))
+        {
+            <div class="text-danger">
+                @Html.Raw(ViewBag.Errors)
+
+
+            </div>
+        }
+
+
+        <div class="row">
+
+            <div class="col-md-6">
+                <h2>Update Profile</h2>
+                <form asp-controller="Admin" asp-action="UpdateProfile" method="post">
+                    <input type="hidden" asp-for="@Model.UserProfileVM.Id" />
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="">First Name</span>
+                        </div>
+                        <input asp-for="@Model.UserProfileVM.FName" type="text" class="form-control">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="">Last name</span>
+                        </div>
+                        <input asp-for="@Model.UserProfileVM.LName" type="text" class="form-control">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="">Date of Birth</span>
+                        </div>
+                        <input asp-for="@Model.UserProfileVM.DOB" max="@enddate" type="date" class="form-control">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="">Gender</span>
+                        </div>
+                        <input asp-for="@Model.UserProfileVM.Gender" type="text" class="form-control">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="">About Me</span>
+                        </div>
+                        <input asp-for="@Model.UserProfileVM.AboutMe" type="text" class="form-control">
+                    </div>
+                   
+                    <div class="">
+                        <input class="btn btn-success mt-2 align-self-center" type="submit" value="Update" />
+
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="col-md-6">
+
+                <div class="SecurityInfo">
+                    <form asp-controller="Admin" asp-action="UpdateSQ" method="post">
+                        <input type="hidden" asp-for="@Model.SQVM.UserId" />
+                        <h2>Update Security Info</h2>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="">Security Question</span>
+                            </div>
+
+                            <select required asp-for="@Model.SQVM.QuestionId" class="form-control" placeholder="select Question"
+                                    asp-items="@(new SelectList(@Model.SQVM.SecurityQuestionsList,"Id","Question"))">
+                            </select>
+
+
+                        </div>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="">Answer</span>
+                            </div>
+                            <input type="text" asp-for="@Model.SQVM.Answer" class="form-control">
+                        </div>
+
+                        <input class="btn btn-success mt-2 " type="submit" value="Update" />
+                    </form>
+
+                </div>
+
+
+
+                    
+            </div>
+        </div>
+
+    </div>
+
+</div>
+

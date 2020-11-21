@@ -1,0 +1,428 @@
+﻿@model Album
+@inject IConfiguration configuration
+@{
+    ViewData["PTitle"] = Model.AlbumName + " Album";
+    ViewData["Title"] = "Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Script{
+    <script>
+        $(function () {
+
+           
+
+            $(".file").change(function () {
+               
+                var formId = $(this).attr("data-formid")
+                $(formId).submit();
+          
+            });
+
+
+
+            $(".deletebtn").click(function () {
+
+                if (confirm("Are you Sure to want delete this Picture?")) {
+
+                }
+                else {
+
+                    return false;
+                }
+
+
+            })
+
+            @*$(".editvalues").click(function () {
+
+            var commentId = $(this).attr("data-commentid");
+                var tcommentId = $(this).attr("data-tcommentid");
+
+                var imgId = $(this).attr("data-imgid");
+                var timgId = $(this).attr("data-timgid");
+
+
+                var action = $(this).attr("data-action");
+
+                if (action == 1) {
+                    $(imgId).removeClass("d-none");
+                    $(timgId).addClass("d-none");
+
+                    $(commentId).removeClass("d-none");
+                    $(tcommentId).addClass("d-none");
+                    $(this).addClass("d-none");
+
+                    var savebtn = $(this).attr("data-saveid");
+                     $(savebtn).removeClass("d-none");
+                }
+
+                else {
+
+                    Photo = new Object();
+                    var input = $(this).attr("data-ECommentID");
+                    Photo.Comment = $(input).val();
+
+                    var imginput = $(this).attr("data-EimgvalueId");
+                    Photo.ImgName = $(imginput).val();
+
+                    Photo.Id = $(this).attr("data-PhotoId");
+
+                        $.ajax({
+
+                  url:'@Url.Action("UpdateCommentandImgName", "User")',
+                data: { photos: JSON.parse(JSON.stringify(Photo)) },
+                type: 'POST',
+                success: function (data) {
+                    $(tcommentId).html(Photo.Comment);
+
+                    $(timgId).html(Photo.ImgName);
+
+                    $(tcommentId).removeClass("d-none");
+                    $(commentId).addClass("d-none");
+
+                    $(imgId).addClass("d-none");
+                    $(timgId).removeClass("d-none");
+                    $(this).addClass("d-none");
+                    var editbtn = $(this).attr("data-editid");
+                    $(editbtn).removeClass("d-none");
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                    alert("error");
+
+
+                }
+            });
+                }
+
+
+
+
+
+            });*@
+
+
+
+
+            $(document).on('click', '.editvalues', function () {
+               
+            var commentId = $(this).attr("data-commentid");
+                var tcommentId = $(this).attr("data-tcommentid");
+
+                var imgId = $(this).attr("data-imgid");
+                var timgId = $(this).attr("data-timgid");
+
+                var editbtn = $(this).attr("data-editid");
+                var action = $(this).attr("data-action");
+                var savebtn = $(this).attr("data-saveid");
+
+                if (action == 1) {
+                  
+                    $(imgId).removeClass("d-none");
+                    $(timgId).addClass("d-none");
+
+                    $(commentId).removeClass("d-none");
+                    $(tcommentId).addClass("d-none");
+                    $(this).addClass("d-none");
+
+                 
+                     $(savebtn).removeClass("d-none");
+                }
+
+                else {
+                 
+                    Photo = new Object();
+                    var input = $(this).attr("data-ecommentid");
+                    Photo.Comment = $(input).val();
+
+                    var imginput = $(this).attr("data-eimgvalueid");
+                    Photo.ImgName = $(imginput).val();
+
+                    if (Photo.ImgName == undefined || Photo.ImgName.trim() == '') {
+
+                        alert("Img Name not be empty");
+                        return false;
+                    }
+
+                    Photo.Id = $(this).attr("data-photoid");
+
+                        $.ajax({
+
+                  url:'@Url.Action("UpdateCommentandImgName", "User")',
+                data: { photos: JSON.parse(JSON.stringify(Photo)) },
+                type: 'POST',
+                success: function (data) {
+                    $(tcommentId).html(Photo.Comment);
+
+                    $(timgId).html(Photo.ImgName);
+
+                    $(tcommentId).removeClass("d-none");
+                    $(commentId).addClass("d-none");
+
+                    $(imgId).addClass("d-none");
+                    $(timgId).removeClass("d-none");
+                    $(savebtn).addClass("d-none");
+               
+                    $(editbtn).removeClass("d-none");
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                    alert("error");
+
+
+                }
+            });
+                }
+
+
+
+
+
+        });
+
+    });
+        var Photo = {
+            Id: 0,
+            Comment: '',
+            ImgName : '',
+
+        }
+
+        function UpdateComment(obj) {
+
+
+
+
+
+        }
+
+
+        $(".SaveComment").click(function () {
+            Photo = new Object();
+            var input = $(this).attr("data-ECommentID");
+            Photo.Comment = $(input).val();
+
+            var imginput = $(this).attr("data-EimgvalueId");
+            Photo.ImgName = $(imginput).val();
+
+            Photo.Id = $(this).attr("data-PhotoId");
+
+            var commentId = $(this).attr("data-commentId");
+            var tcommentId = $(this).attr("data-tcommentId");
+
+
+
+
+
+        });
+
+    </script>
+
+
+
+}
+@section Style{ 
+<style>
+    .image-upload > input {
+        display: none;
+    }
+</style>
+
+}
+
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link" id="home-tab" asp-action="Profile" asp-controller="User">Profile</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="profile-tab" asp-action="EditProfile" asp-controller="User">Edit Profile</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="contact-tab0" asp-action="NewAlbum" asp-controller="User">New Albums</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" id="contact-tab" asp-action="MyAlbums" asp-controller="User">My Albums</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="contact-tab2" asp-action="Favorites" asp-controller="User">Favorites</a>
+    </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">1</div>
+    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+
+        1
+
+
+    </div>
+    <div class="tab-pane fade" id="contact0" role="tabpanel" aria-labelledby="contact-tab0">312</div>
+    <div class="tab-pane fade show active mt-2" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+
+        <form asp-controller="User" asp-action="UpdateAlbum" method="post" enctype="multipart/form-data">
+            <input type="hidden" asp-for="@Model.Id" />
+
+            <input type="hidden" asp-for="@Model.ProtectorId" />
+
+            <div class="row">
+                @if (!String.IsNullOrEmpty(ViewBag.Error))
+                {
+                    <div class="text-danger col-md-12">
+                        @ViewBag.Error
+                    </div>
+
+                }
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="">Album Name</span>
+                        </div>
+                        <input required asp-for="@Model.AlbumName" type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input multiple accept="image/*" asp-for="@Model.FileLists" type="file" class="btn btn-info" value="Upload Photos" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="">
+                        <input class="btn btn-success mt-2" type="submit" value="Update Album" />
+
+                    </div>
+                </div>
+
+
+
+            </div>
+
+
+
+
+
+
+        </form>
+
+
+        <div class="row mt-3">
+
+            <div class="col-md-12">
+
+                <div class="card">
+                    <div class="card-header">
+                        All ALbums
+                    </div>
+                    <div class="card-body">
+
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th style="width:3%">&nbsp;</th>
+                                    <th>Image</th>
+                                    <th style="width:10%">Image Name</th>
+                                    <th style="width: 40%">Comment/Tag</th>
+                                    <th class="w-25"> Action </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.PhotoList)
+                                {
+                                    string basepath = String.Empty;
+                                    string downloadpath = String.Empty;
+                                    string photopath = String.Empty;
+
+                                    basepath = configuration["PhotoPath"].ToString() + "/";
+                                    downloadpath = "../" + basepath + item.PhotoPath;
+                                    photopath = String.IsNullOrEmpty(item.PhotoPath) ? "" : "~/" + basepath + item.PhotoPath;
+
+                                    <tr>
+                                        <th>
+                                            @if (item.IsFav)
+                                            {
+                                                <a asp-action="AddToFav" asp-controller="User" asp-route-Id="@item.Id" asp-route-isFav="false" asp-route-EncrytedId="@ViewBag.AlbumEncryptedId">
+                                                    <span class="fa fa-check text-success"></span>
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a asp-action="AddToFav" asp-controller="User" asp-route-Id="@item.Id" asp-route-isFav="true" asp-route-EncrytedId="@ViewBag.AlbumEncryptedId">
+                                                    <span class="fa fa-plus"></span>
+                                                </a>
+
+                                            }
+
+
+                                        </th>
+                                        <th> <img class="userimage" src="@photopath" asp-append-version="true" style="width:25%" /></th>
+                                        @*<td>@item.ImgName</td>*@
+
+                                        <td id="timg_@item.Id">@item.ImgName</td>
+                                        <td class="d-none" id="img_@item.Id">
+                                            <div class="row" id="img_@item.Id">
+                                                <input type="text" value="@item.ImgName" id="imgvalue_@item.Id" class="form-control col-md-9 " />
+
+                                                @*<input class="col-md-2 btn btn-success order-md-12 SaveComment" data-img_Id="#img_@item.Id" data-timgId="#timg_@item.Id" data-PhotoId="@item.Id" data-Eimg_ID="#commentvalue_@item.Id" type="button" value="save" />*@
+
+                                            </div>
+                                        </td>
+
+
+
+
+                                        <td id="tComment_@item.Id">@item.Comment</td>
+                                        <td class="d-none" id="Comment_@item.Id">
+                                            <div class="row" id="Comment_@item.Id">
+                                                <input type="text" value="@item.Comment" id="commentvalue_@item.Id" class="form-control col-md-9 " />
+
+                                                @*<input class="col-md-2 btn btn-success order-md-12 SaveComment" data-commentId="#Comment_@item.Id" data-tcommentId="#tComment_@item.Id" data-PhotoId="@item.Id" data-ECommentID="#commentvalue_@item.Id" type="button" value="save" />*@
+
+                                            </div>
+                                        </td>
+
+                                        <td class="align-self-center">
+                                            <span id="edit_@item.Id" data-saveid="#savebtn_@item.Id" class="fas fa-edit editvalues" data-imgId="#img_@item.Id" data-timgId="#timg_@item.Id" data-commentId="#Comment_@item.Id" data-tcommentId="#tComment_@item.Id" data-action="1"></span>
+                                            <span data-saveid="#savebtn_@item.Id" data-editid="#edit_@item.Id" id="savebtn_@item.Id" class="fas fa-save editvalues d-none" data-commentId="#Comment_@item.Id" data-tcommentId="#tComment_@item.Id" data-PhotoId="@item.Id" data-EimgvalueId="#imgvalue_@item.Id" data-ECommentID="#commentvalue_@item.Id" data-imgId="#img_@item.Id" data-timgId="#timg_@item.Id" data-action="0"></span>
+
+                                            <a asp-action="DeletePhoto" asp-controller="User" asp-route-Id="@item.Id" asp-route-AlbumEncrypted="@ViewBag.AlbumEncryptedId" class="deletebtn"><span class="fas fa-trash"></span></a>
+                                            @*<span class="fa fa-download Downloadpic" data-photoname="@item.ImgName" data-pic="@downloadpath"></span>*@
+                                        <form id="ReplaceForm_@item.Id" asp-action="ReplacePhoto" asp-controller="User" method="post" enctype="multipart/form-data">
+                                            <input type="hidden" asp-for="@item.Id" name="Id" />
+                                            <input type="hidden" asp-for="@item.PhotoPath" name="PhotoPath" />
+                                            <input type="hidden" asp-for="@item.AlbumId" name="AlbumId" />
+                                            <input type="hidden" asp-for="@item.AlbumEncrypted" value="@ViewBag.AlbumEncryptedId" name="AlbumEncrypted" />
+                                            <span class="image-upload">
+                                                <label for="file-input_@item.Id">
+                                                    <img src="https://icon-library.net/images/upload-photo-icon/upload-photo-icon-21.jpg" style="width:20px" />
+                                                </label>
+
+                                                <input data-formid="#ReplaceForm_@item.Id" name="ReplacePhoto" asp-for="@item.ReplacePhoto" id="file-input_@item.Id" class="file" type="file" />
+
+                                            </span>
+                                        </form>
+                                        </td>
+
+                                    </tr>
+
+                                }
+
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+    <div class="tab-pane fade" id="contact2" role="tabpanel" aria-labelledby="contact-tab2">4</div>
+</div>
+
+
+

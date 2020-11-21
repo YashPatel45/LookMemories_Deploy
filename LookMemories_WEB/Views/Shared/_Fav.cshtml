@@ -1,0 +1,57 @@
+﻿@model List<Photos>
+@inject IConfiguration configuration
+
+
+
+@if (Model.Count > 0)
+{
+    <div class="row mt-3">
+
+        <div class="col-md-12">
+
+            <div class="card">
+                <div class="card-header">
+                    Fav Pictures
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        @foreach (var item in Model)
+                        {
+
+                            string photopath = String.Empty;
+                            string downloadPath = String.Empty;
+
+                            string basepath =  configuration["PhotoPath"].ToString() + "/";
+                            downloadPath = "../" + basepath + item.PhotoPath;
+                            photopath = "~/" + basepath + item.PhotoPath;
+
+                        <div class="col-md-1">
+
+                          
+                            <div>
+                                <span style="cursor: pointer;" class="fa fa-download Downloadpic text-info" data-photoname="@item.ImgName" data-pic="@downloadPath"></span>
+                                @*<span style="cursor: pointer;" class="float-right fa fa-sharess Downloadpic text-info" data-photoname="@item.ImgName" data-pic="@downloadPath"></span>*@
+                            </div>
+                                
+                            
+                            <a href="#">
+
+                                <img src="@photopath" class="img-thumbnail userimage" asp-append-version="true" />
+                                <div class="text-center">@item.ImgName</div>
+                            </a>
+                        </div>
+
+
+                        }
+                    </div>
+
+                    <div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+}
